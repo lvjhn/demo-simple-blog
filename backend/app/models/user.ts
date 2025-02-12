@@ -43,10 +43,13 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare password: string
 
   @column()
-  declare birthdate: DateTime
+  declare birthdate: Date
 
   @column() 
   declare country_id: number 
+
+  @column()
+  declare gender: string
 
   @belongsTo(() => Country) 
   declare country: BelongsTo<typeof Country>

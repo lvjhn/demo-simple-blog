@@ -1,12 +1,11 @@
 import { belongsTo } from "@adonisjs/lucid/orm"
-import type { BelongsTo } from "@adonisjs/lucid/types/relations"
 
 function createClass(table: any, Something: any, ReferredClass: any) {
     class DynamicClass extends Something {
         static table = table;
 
-        @belongsTo(() => ReferredClass)
-        declare liked: BelongsTo<typeof ReferredClass>;
+        @belongsTo(ReferredClass)
+        declare liked : any;
     }
 
     return DynamicClass;

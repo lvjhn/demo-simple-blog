@@ -12,6 +12,7 @@ export default class extends BaseSchema {
       table.string("username", 32).notNullable()
       table.string("email", 256).notNullable()
       table.string("password", 256).notNullable()
+      table.string("gender", 32).notNullable()
       table.dateTime("birthdate").notNullable()
       table.integer("country_id")
            .unsigned()

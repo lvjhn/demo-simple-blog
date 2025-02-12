@@ -29,10 +29,11 @@ export class BaseLikeable extends BaseModel
   declare liked: any
 }
 
+
 const mappings = {
-  PostLike : ['post_likes', Post], 
-  CommentLike : ['comment_likes', Comment], 
-  ReplyLike : ['reply_likes', Reply]
+  PostLike : ['post_likes', () => Post], 
+  CommentLike : ['comment_likes', () => Comment], 
+  ReplyLike : ['reply_likes', () => Reply]
 }
 
 interface Likeables {
