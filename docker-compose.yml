@@ -1,0 +1,89 @@
+version: "3.3"
+
+services: 
+  frontend: 
+    container_name: demo-simple-blog.frontend 
+    env_file:
+      - .env 
+    build: 
+      context: ./frontend 
+      dockerfile: Dockerfile 
+    user: root 
+    ports: 
+      - "${FRONTEND_PORT}:5173" 
+    privileged: true 
+    volumes: 
+      - ./frontend:/home/demo-simple-blog.frontend 
+    networks: 
+      main:
+        ipv4_address: 172.28.0.101
+
+  backend: 
+    container_name: demo-simple-blog.backend 
+    env_file: 
+      - .env 
+    build: 
+      context: ./backend 
+      dockerfile: Dockerfile
+    tty: true
+    user: root 
+    ports: 
+      - "${BACKEND_PORT}:3333"
+    privileged: true 
+    volumes: 
+      - ./backend:/home/demo-simple-blog.backend 
+    networks: 
+      main:
+        ipv4_address: 172.28.0.102
+
+  cache: 
+    container_name: demo-simple-blog.cache
+    env_file: 
+      - .env 
+    image: redis:7.2.4-alpine 
+    user: root
+    restart: always
+    ports: 
+      - "${REDIS_PORT}:6379"
+    privileged: true
+    command: 
+      redis-server --requirepass ${REDIS_PASSWORD} 
+    volumes: 
+      - cache:/data
+      - ./backend/.avd/redis.conf:/usr/local/redis/redis.conf
+    networks: 
+      main:
+        ipv4_address: 172.28.0.103
+
+  database: 
+    container_name: demo-simple-blog.database
+    env_file: 
+      - .env 
+    image: postgres:17.2
+    user: root
+    restart: always
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - PGDATA=/var/lib/postgresql/data
+      - POSTGRES_INITDB_ARGS=--data-checksums
+    ports:
+      - "${DATABASE_PORT}:5432"
+    volumes: 
+      - database:/var/lib/postgresql/data
+    networks: 
+      main:
+        ipv4_address: 172.28.0.104
+
+volumes: 
+  cache:
+    driver: local
+  database: 
+    driver: local
+
+networks: 
+  main: 
+    ipam:
+        driver: default
+        config:
+          - subnet: 172.28.0.0/16
