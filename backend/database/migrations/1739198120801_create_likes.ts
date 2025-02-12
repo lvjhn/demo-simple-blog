@@ -9,7 +9,7 @@ export default class extends BaseSchema {
 
     for(let tableName of this.tableNames)
       this.schema.createTable(tableName, (table) => {
-        table.increments('id')
+        table.bigIncrements('id')
       
         table.integer("liker_id")
              .unsigned()
